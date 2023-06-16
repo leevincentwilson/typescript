@@ -23,3 +23,39 @@ function factory<Type extends Record<string,string>>(obj: Type): BooleanRecord<T
   throw Error('Something went wrong')
 }
 console.log(factory(keyValues).planA);
+
+
+
+/************/
+
+
+type OptionsFlags<Type> = {
+  [Property in keyof Type]: {
+    key: Property,
+    value: keyof Property
+    }
+};
+
+type Features = {
+  darkMode: number;
+  newUserProfile: number;
+};
+ 
+type FeatureOptions = OptionsFlags<Features>;
+
+
+const test: FeatureOptions = {
+    darkMode: {
+        key: 'darkMode',
+        value: 1
+    },
+    newUserProfile: {
+        key: 'newUserProfile',
+        value: 2
+    }
+}
+
+
+
+
+
