@@ -1,8 +1,14 @@
+/*
+Two Approachs for converting an objects values into another type of value
+Approach 1 uses typeguarding
+Approach 2 uses casting 
+*/
+
 const keyValues = {
   planA: "PLAN_A",
   planB: "PLAN_B",
   planC: "PLAN_C",
-} as const;
+}
 
 type BooleanRecord<Type> = Record<keyof Type, boolean>;
 function isFull<TypeA extends Record<string,string> >(
@@ -22,40 +28,38 @@ function factory<Type extends Record<string,string>>(obj: Type): BooleanRecord<T
   }
   throw Error('Something went wrong')
 }
-console.log(factory(keyValues).planA);
+console.log('test1',factory(keyValues));
 
 
 
 /************/
 
 
-type OptionsFlags<Type> = {
-  [Property in keyof Type]: {
-    key: Property,
-    value: keyof Property
-    }
-};
-
-type Features = {
-  darkMode: number;
-  newUserProfile: number;
-};
+type BooleanObj<Type> = { [Property in keyof Type]: boolean }
  
-type FeatureOptions = OptionsFlags<Features>;
+function convertValuesToBoolean<Type extends Record<string, unknown>>(obj: Type): BooleanObj<Type> {
+  return Object.entries(obj).reduce((result, [key]) => {
+    return {
+        ...result,
+        [key as keyof Type]: false
+    };
+  }, {} as  BooleanObj<Type>);
+}
+
+const test2 = convertValuesToBoolean(keyValues)
+
+console.log('test2',test2)
 
 
-const test: FeatureOptions = {
-    darkMode: {
-        key: 'darkMode',
-        value: 1
-    },
-    newUserProfile: {
-        key: 'newUserProfile',
-        value: 2
-    }
+/*********/
+
+function convertObjectToBooleanMap<T extends Record<string,unknown>>(obj: T): Map<keyof T, boolean> {
+  const result = new Map<string, boolean>();
+  for (const [key] of Object.entries(obj)) {
+    result.set(key, false);
+  }
+  return result;
 }
 
 
-
-
-
+console.log('test3',convertObjectToBooleanMap(keyValues))
