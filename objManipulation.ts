@@ -3,6 +3,11 @@ Two Approachs for converting an objects values into another type of value
 Approach 1 uses typeguarding
 Approach 2 uses casting 
 */
+/*
+Two Approachs for converting an objects values into another type of value
+Approach 1 uses typeguarding
+Approach 2 uses casting 
+*/
 
 const keyValues = {
   planA: "PLAN_A",
@@ -37,14 +42,12 @@ console.log('test1',factory(keyValues));
 
 type BooleanObj<Type> = { [Property in keyof Type]: boolean }
  
-function convertValuesToBoolean<Type extends Record<string, unknown>>(obj: Type): BooleanObj<Type> {
-  return Object.entries(obj).reduce((result, [key]) => {
-    return {
-        ...result,
-        [key as keyof Type]: false
-    };
-  }, {} as  BooleanObj<Type>);
-}
+const convertValuesToBoolean = <Type extends Record<string, unknown>>(obj: Type): BooleanObj<Type> =>
+  Object.entries(obj).reduce((result, [key]) => ({
+    ...result,
+    [key as keyof Type]: false
+  }), {} as BooleanObj<Type>);
+
 
 const test2 = convertValuesToBoolean(keyValues)
 
@@ -53,13 +56,14 @@ console.log('test2',test2)
 
 /*********/
 
-function convertObjectToBooleanMap<T extends Record<string,unknown>>(obj: T): Map<keyof T, boolean> {
-  const result = new Map<string, boolean>();
+const convertObjectToBooleanMap = <T extends Record<string, unknown>>(obj: T): Map<keyof T, boolean> => {
+  const result = new Map<keyof T, boolean>();
   for (const [key] of Object.entries(obj)) {
     result.set(key, false);
   }
   return result;
-}
+};
 
 
 console.log('test3',convertObjectToBooleanMap(keyValues))
+
