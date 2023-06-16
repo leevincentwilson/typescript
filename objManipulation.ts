@@ -3,11 +3,6 @@ Two Approachs for converting an objects values into another type of value
 Approach 1 uses typeguarding
 Approach 2 uses casting 
 */
-/*
-Two Approachs for converting an objects values into another type of value
-Approach 1 uses typeguarding
-Approach 2 uses casting 
-*/
 
 const keyValues = {
   planA: "PLAN_A",
