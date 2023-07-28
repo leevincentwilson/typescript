@@ -1,19 +1,18 @@
-
 type UrqlResponse = { __typename: string };
-type TypeName = 'Failure' | 'Success';
-const isResponseTest = <
-  X extends string,
-  R extends UrqlResponse | undefined,
-  T extends TypeName >(
+
+export const containsOfType = <
+  R extends UrqlResponse | undefined | null,
+  T extends string,
+  X extends string
+>(
   response: R,
   type: T
 ): response is Extract<
   R,
   { __typename: `${X}${T}` }
 > => {
-  return response && response?.__typename.includes(type);
+  return (response?.__typename|| '').includes( type);
 }
-
 
 
 type Failure = {
@@ -25,7 +24,12 @@ type Success = {
     success: true
 }
 
-type MyResponse = Failure | Success
+type Unknown = {
+    __typename: 'Unknown',
+    unknown: true
+}
+
+type MyResponse = Failure | Success |Unknown
 
 
 const myResponse = {
@@ -33,10 +37,35 @@ const myResponse = {
     failed: true
 } as MyResponse
 
-if(isResponseTest(myResponse, 'Success')){
+if(containsOfType(myResponse, 'Success')){
     console.log(myResponse.success)
-}else{
+}else if(containsOfType(myResponse,'Failure')){
     console.log(myResponse.failed)
+}else{
+  console.log(myResponse.unknown)
+}
+console.log(myResponse.unknown)
+
+
+
+export const containsType = <
+  R extends UrqlResponse | undefined | null,
+  T extends string,
+>(
+  response: R,
+  type: T
+): response is Extract<
+  R,
+  { __typename: `${T}` }
+> => {
+  return response?.__typename === type;
 }
 
-console.log(myResponse.failed)
+if(containsType(myResponse, 'Success')){
+    console.log(myResponse.success)
+}else if(containsType(myResponse,'MyAwesomeFailure')){
+    console.log(myResponse.failed)
+}else{
+  console.log(myResponse.unknown)
+}
+console.log(myResponse.unknown)
